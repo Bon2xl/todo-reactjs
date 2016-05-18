@@ -29333,6 +29333,8 @@ module.exports = require('./lib/React');
 },{"./lib/React":56}],169:[function(require,module,exports){
 'use strict';
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var $ = require('jquery');
 var React = require('react');
 var ReactDOM = require('react-dom');
@@ -29342,15 +29344,23 @@ var Todo = React.createClass({
 
 	getInitialState: function getInitialState() {
 		return {
-			value: 'Hello!'
+			valueInput: ''
 		};
 	},
 	componentDidMount: function componentDidMount() {},
 	render: function render() {
-		return React.createElement('input', { type: 'text', value: this.state.value, onChange: this.handleChange });
+		var _React$createElement;
+
+		return React.createElement(
+			'form',
+			{ className: 'commentForm' },
+			React.createElement('input', (_React$createElement = { type: 'text', name: 'addTodo', placeholder: 'Add todo' }, _defineProperty(_React$createElement, 'type', 'text'), _defineProperty(_React$createElement, 'value', this.state.valueInput), _defineProperty(_React$createElement, 'onChange', this.handleChange), _React$createElement)),
+			React.createElement('input', { type: 'submit', value: 'Post' })
+		);
 	},
-	handleChange: function handleChange(event) {
-		this.setState({ value: event.target.value });
+	handleChange: function handleChange(e) {
+		e.preventDefault();
+		this.setState({ valueInput: event.target.value });
 	}
 });
 

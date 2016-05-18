@@ -5,7 +5,7 @@ var ReactDOM = require('react-dom');
 var Todo = React.createClass({
 	getInitialState: function() {
 	   return {
-	   	value: 'Hello!'
+	   	valueInput: ''
 	   };
 	 },
 	 componentDidMount: function() {
@@ -13,11 +13,15 @@ var Todo = React.createClass({
 	 },
   render: function() {
     return (
-    	<input type="text" value={this.state.value} onChange={this.handleChange} />
+    	<form className="commentForm">
+	    	<input type="text" name="addTodo" placeholder="Add todo" type="text" value={this.state.valueInput} onChange={this.handleChange} />
+	    	<input type="submit" value="Post" />
+	    </form>
     );
   },
-  handleChange: function(event) {
-		this.setState({value: event.target.value});
+  handleChange: function(e) {
+  	e.preventDefault();
+		this.setState({valueInput: event.target.value});
 	}
 });
 
