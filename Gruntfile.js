@@ -1,21 +1,18 @@
 'use strict';
 
-var request = require('request');
+var reloadPort = 9002;
 
 module.exports = function (grunt) {
-  
-  // show elapsed time at the end
-  require('time-grunt')(grunt);
-  // load all grunt tasks
   require('load-grunt-tasks')(grunt);
-
-  var reloadPort = 35729, files;
-
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    develop: {
+    connect: {
       server: {
-        file: 'app.js'
+        options: {
+          port: reloadPort,
+          base: 'app',
+          livereload: true,
+        }
       }
     },
     browserify: {
@@ -29,78 +26,36 @@ module.exports = function (grunt) {
           ]
         },
         files: {
-          "public/react/app-react.js": ["public/react/templates/app.jsx"]
-        }
-      }
-    },
-    sass: {
-      dist: {
-        files: {
-          'public/css/style.css': 'public/css/style.scss'
+          "app/app-react.js": ["app.jsx"]
         }
       }
     },
     watch: {
       options: {
-        nospawn: true,
-        livereload: reloadPort
+        nospawn: true
+      },
+      html: {
+        files: ['app/index.html'],
+        options: {
+          livereload: true,
+        }
+      },
+      grunt: { 
+        files: ['Gruntfile.js']
       },
       browserify: {
-        files: ["public/react/templates/*.jsx"],
+        files: ["*.jsx"],
         tasks: ["browserify"],
         options: {
-          livereload: reloadPort
+          livereload: true,
         }
       },
-      js: {
-        files: [
-          'app.js',
-          'app/**/*.js',
-          'config/*.js'
-        ],
-        tasks: ['develop', 'delayed-livereload']
-      },
-      css: {
-        files: [
-          'public/css/*.scss'
-        ],
-        tasks: ['sass'],
-        options: {
-          livereload: reloadPort
-        }
-      },
-      views: {
-        files: [
-          'app/views/*.ejs',
-          'app/views/**/*.ejs'
-        ],
-        options: { livereload: reloadPort }
-      }
     }
   });
 
-  grunt.config.requires('watch.js.files');
-  files = grunt.config('watch.js.files');
-  files = grunt.file.expand(files);
-
-  grunt.registerTask('delayed-livereload', 'Live reload after the node server has restarted.', function () {
-    var done = this.async();
-    setTimeout(function () {
-      request.get('http://localhost:' + reloadPort + '/changed?files=' + files.join(','),  function(err, res) {
-          var reloaded = !err && res.statusCode === 200;
-          if (reloaded)
-            grunt.log.ok('Delayed live reload successful.');
-          else
-            grunt.log.error('Unable to make a delayed live reload.');
-          done(reloaded);
-        });
-    }, 500);
-  });
-
   grunt.registerTask('default', [
-    'sass',
-    'develop',
     'browserify',
+    'connect',
     'watch'
   ]);
 };
