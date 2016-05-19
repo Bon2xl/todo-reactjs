@@ -1,7 +1,9 @@
 var $ = require('jquery');
 var React = require('react');
 var ReactDOM = require('react-dom');
+var Firebase = require('firebase');
 var ReactFireMixin = require('reactfire');
+var Config = require('./config.js');
  
 var Todo = React.createClass({
 	mixins: [ReactFireMixin],
@@ -11,9 +13,9 @@ var Todo = React.createClass({
 	   	valueInput: ''
 	   }; 
 	 },
-	 componentDidMount: function() {
-//
-	 },
+	componentDidMount: function() {
+		Firebase.initializeApp(Config);
+	},
   render: function() {
     return (
     	<form className="commentForm">
