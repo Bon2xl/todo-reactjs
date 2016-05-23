@@ -40,11 +40,11 @@ module.exports = function (grunt) {
           livereload: true,
         }
       },
-      grunt: { 
+      grunt: {
         files: ['Gruntfile.js']
       },
       browserify: {
-        files: ["*.jsx"],
+        files: ["**/*.jsx"],
         tasks: ["browserify"],
         options: {
           livereload: true,
